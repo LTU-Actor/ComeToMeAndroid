@@ -1,4 +1,9 @@
 <resources>
-    <string name="app_name">ToLocation</string>
+    <string name="app_name">ACTor-ComeToMe</string>
     <string name="title_activity_maps">Map</string>
+    <string name="permission_rationale">Device location required for \'Come to Me\' functionality</string>
+    <string name="permission_denied_explanation">For this functionality, please enable location data in Settings.</string>
+    <string name="settings">Settings</string>
+    <string name="vehicle_received_location">Vehicle Received Location!</string>
+    <string name="sending_location">Sending Location to: </string>
 </resources>

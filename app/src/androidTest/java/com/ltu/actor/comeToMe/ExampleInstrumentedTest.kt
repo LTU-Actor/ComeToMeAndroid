@@ -1,4 +1,4 @@
-package com.example.tolocation
+package com.ltu.actor.comeToMe
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

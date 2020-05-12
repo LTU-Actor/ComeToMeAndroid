@@ -1,4 +1,4 @@
-package com.example.tolocation
+package com.ltu.actor.comeToMe
 
 import org.junit.Test
 
