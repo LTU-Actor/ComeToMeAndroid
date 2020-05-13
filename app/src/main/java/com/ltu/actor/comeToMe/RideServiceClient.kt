@@ -29,7 +29,7 @@ class RideServiceClient {
 
         private const val LAT = "lat"
         private const val LONG = "long"
-        private const val COOR = "coor"
+        private const val COORD = "coord"
 
         const val VEHICLE_IP = "http://192.168.99.5:8642"
     }
@@ -44,7 +44,7 @@ class RideServiceClient {
             locationData[LONG] = location.longitude
 
             val postData: MutableMap<String, LocationData> = HashMap()
-            postData[COOR] = locationData
+            postData[COORD] = locationData
 
             val task = HttpPostAsyncTask(postData, RequestType.REQUEST_POST_LOCATION, callback)
 
