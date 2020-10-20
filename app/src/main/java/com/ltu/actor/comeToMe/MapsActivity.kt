@@ -45,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val button: Button = findViewById(R.id.button_id)
         button.setOnClickListener {
+            Log.i(TAG, "Button pressed.")
             sendLocation()
         }
 
@@ -120,7 +121,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun sendLocation() {
         if (!isNetworkConnected()) return
 
-        Log.i(TAG, "Button Pressed")
+        Log.i(TAG, "Network or VPN  available")
         getLastLocation {
             Log.i(TAG, "Have a location")
 
@@ -250,7 +251,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val activeNetwork = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
         return networkCapabilities != null &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN) || networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
     }
 
     companion object {

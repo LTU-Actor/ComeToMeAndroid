@@ -32,6 +32,7 @@ class RideServiceClient {
         private const val COORD = "coord"
 
         const val VEHICLE_IP = "http://192.168.99.5:8642"
+//        const val VEHICLE_IP = "http://192.168.60.100:8642" // non-VPN IP
     }
 
     suspend fun sendPostRequestForLocation(location: Location, callback: RideServiceClientCallback): AsyncTask<String?, Void?, Void?> {
