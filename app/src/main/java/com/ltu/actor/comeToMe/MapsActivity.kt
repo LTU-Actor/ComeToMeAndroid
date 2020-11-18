@@ -110,7 +110,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startLocationUpdates() {
-        mFusedLocationProviderClient.requestLocationUpdates(LocationRequest(), mLocationCallback, Looper.getMainLooper())
+        var locationRequest = LocationRequest()
+        locationRequest.interval = 100
+        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper())
     }
 
     private fun stopLocationUpdates() {
