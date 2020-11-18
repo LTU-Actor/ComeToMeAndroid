@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ltu.actor.comeToMe.RideServiceClient.Companion.VEHICLE_IP
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -112,6 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startLocationUpdates() {
         var locationRequest = LocationRequest()
         locationRequest.interval = 100
+        locationRequest.priority = PRIORITY_HIGH_ACCURACY
         mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper())
     }
 
