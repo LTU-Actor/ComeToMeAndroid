@@ -16,10 +16,7 @@ import androidx.core.app.ActivityCompat
 import com.ltu.actor.comeToMe.RideServiceClient.Companion.VEHICLE_IP
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.GlobalScope
@@ -34,7 +31,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mLastLocation: Location? = null
         set(value) {
-            updateMapLocation(value)
             field = value
         }
 
@@ -235,18 +231,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     // Maps
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        updateMapLatLng(mLastLocation?.let { LatLng(it.latitude, it.longitude) } ?: LatLng(0.0, 0.0))
-    }
-
-    private fun updateMapLatLng(location: LatLng) {
-        mMap.addMarker(MarkerOptions().position(location).title("Device Location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17.0f))
-    }
-
-    private fun updateMapLocation(location: Location?) {
-        val latLong =  location?.let { LatLng(it.latitude, it.longitude) } ?: return
-        mMap.addMarker(MarkerOptions().position(latLong).title("Device Location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLong, 17.0f))
+        mMap.isMyLocationEnabled = true;
     }
 
     // Networking
