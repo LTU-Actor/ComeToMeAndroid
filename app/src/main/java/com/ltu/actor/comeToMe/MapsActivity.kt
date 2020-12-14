@@ -1,6 +1,7 @@
 package com.ltu.actor.comeToMe
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -13,12 +14,13 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.ltu.actor.comeToMe.RideServiceClient.Companion.VEHICLE_IP
+import androidx.core.app.ActivityCompat.checkSelfPermission
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.ltu.actor.comeToMe.RideServiceClient.Companion.VEHICLE_IP
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -107,10 +109,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startLocationUpdates() {
-        var locationRequest = LocationRequest()
+        val locationRequest = LocationRequest()
         locationRequest.interval = 100
         locationRequest.priority = PRIORITY_HIGH_ACCURACY
-        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper())
+        if (checkHaveLocationPermission()) {
+            mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper())
+        }
     }
 
     private fun stopLocationUpdates() {
@@ -143,7 +147,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // FusedLocationProviderClient
     private fun getLastLocation(onRetrieval: (location: Location) -> Unit) {
-        mFusedLocationProviderClient.lastLocation.addOnCompleteListener(this) { task ->
+        if (checkHaveLocationPermission()) {
+            mFusedLocationProviderClient.lastLocation.addOnCompleteListener(this) { task ->
                 Log.i(TAG, "Received location")
                 val resultingLocation = task.result
                 Log.i(TAG, "Result: $resultingLocation")
@@ -164,6 +169,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
+        }
     }
 
     // Messages to User
@@ -187,7 +193,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // Location Permissions
     private fun checkPermissions(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionState = checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         Log.i(TAG, "Permission State: $permissionState")
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
@@ -218,6 +224,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.i(TAG, "PERMISSION_GRANTED")
                     getLastLocation {
                         mLastLocation = it
+                        if (checkHaveLocationPermission()) {
+                            mMap.isMyLocationEnabled = true
+                        }
                     }
                 }
                 else -> {
@@ -231,7 +240,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     // Maps
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.isMyLocationEnabled = true;
+        if (checkHaveLocationPermission()) {
+            mMap.isMyLocationEnabled = true
+
+            val location = mMap.myLocation
+        }
+    }
+
+    private fun checkHaveLocationPermission(): Boolean {
+        if (checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true
+        }
+        return false
     }
 
     // Networking
