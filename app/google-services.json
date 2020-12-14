@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "65530885612",
+    "project_id": "cometome-f87ca",
+    "storage_bucket": "cometome-f87ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65530885612:android:33ef10dc7084b745e53cc9",
+        "android_client_info": {
+          "package_name": "com.ltu.actor.comeToMe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65530885612-ecaf7semoibcfhktmrctvnpem9o84n2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeoy0ZLQwyEXK2SHGALsr7ncZvL-AXpec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65530885612-ecaf7semoibcfhktmrctvnpem9o84n2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
