@@ -1,7 +1,6 @@
-package com.ltu.actor.comeToMe
+package com.ltu.actor.vehicleSummonSystem
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -20,7 +19,7 @@ import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.ltu.actor.comeToMe.RideServiceClient.Companion.VEHICLE_IP
+import com.ltu.actor.vehicleSummonSystem.RideServiceClient.Companion.VEHICLE_IP
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 

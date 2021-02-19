@@ -1,4 +1,4 @@
-package com.ltu.actor.comeToMe
+package com.ltu.actor.vehicleSummonSystem
 
 import org.junit.Test
 

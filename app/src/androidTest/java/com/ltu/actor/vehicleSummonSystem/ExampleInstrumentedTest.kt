@@ -1,4 +1,4 @@
-package com.ltu.actor.comeToMe
+package com.ltu.actor.vehicleSummonSystem
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

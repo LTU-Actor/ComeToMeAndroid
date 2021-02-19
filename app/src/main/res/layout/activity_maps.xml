@@ -9,11 +9,12 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
-    <Button android:id="@+id/button_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Come to me"
-            android:layout_weight="1" />
+        tools:layout="@layout/activity_maps" />
+
+    <Button
+        android:id="@+id/button_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/summon_vehicle" />
 </FrameLayout>
     
