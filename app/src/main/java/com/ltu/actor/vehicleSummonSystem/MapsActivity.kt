@@ -20,8 +20,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.ltu.actor.vehicleSummonSystem.RideServiceClient.Companion.VEHICLE_IP
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -31,11 +30,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mLocationCallback: LocationCallback
 
     private var mLastLocation: Location? = null
-        set(value) {
-            field = value
-        }
 
     // Lifecycle
+    @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,8 +65,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onLocationAvailability(p0: LocationAvailability?) {
-                super.onLocationAvailability(p0)
                 if (p0 != null) {
+                    super.onLocationAvailability(p0)
                     when {
                         p0.isLocationAvailable -> {
                             Log.i(TAG, "Location Available.")
@@ -108,7 +105,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startLocationUpdates() {
-        val locationRequest = LocationRequest()
+        val locationRequest = LocationRequest.create()
         locationRequest.interval = 100
         locationRequest.priority = PRIORITY_HIGH_ACCURACY
         if (checkHaveLocationPermission()) {
@@ -121,6 +118,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     // RideServiceClient
+    @DelicateCoroutinesApi
     private fun sendLocation() {
         if (!isNetworkConnected()) return
 
@@ -131,9 +129,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val client = RideServiceClient()
             Log.i(TAG, "Ride Service Client: $client")
 
+            @Suppress("DeferredResultUnused")
             GlobalScope.async {
                 Log.i(TAG, "Launched thread to make request")
                 showSnackBar(mainText = "${getString(R.string.sending_location)} $VEHICLE_IP")
+
                 client.sendPostRequestForLocation(it, object : RideServiceClientCallback {
                     override fun completionHandler(success: Boolean?, type: RequestType?) {
                         Log.i(TAG, "completionHandler - success $success")
@@ -241,8 +241,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         if (checkHaveLocationPermission()) {
             mMap.isMyLocationEnabled = true
-
-            val location = mMap.myLocation
         }
     }
 
