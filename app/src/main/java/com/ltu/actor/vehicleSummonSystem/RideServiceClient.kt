@@ -3,6 +3,7 @@ package com.ltu.actor.vehicleSummonSystem
 import android.location.Location
 import android.util.Log
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -14,8 +15,6 @@ enum class RequestType {
 interface RideServiceClientCallback {
     fun completionHandler(success: Boolean?, type: RequestType?)
 }
-
-typealias LocationData = MutableMap<String, Double>
 
 class RideServiceClient {
 
@@ -34,12 +33,14 @@ class RideServiceClient {
         location: Location,
         callback: RideServiceClientCallback
     ) = withContext(Dispatchers.IO) {
-        val locationData: LocationData = HashMap()
-        locationData[LAT] = location.latitude
-        locationData[LONG] = location.longitude
 
-        val postData: MutableMap<String, LocationData> = HashMap()
-        postData[COORD] = locationData
+        val locationData = JSONObject()
+        locationData.put(LAT, location.latitude);
+        locationData.put(LONG, location.longitude);
+
+        val postData = JSONObject()
+        postData.put(COORD, locationData);
+
 
         val url = URL(VEHICLE_IP)
         (url.openConnection() as? HttpURLConnection)?.run {
