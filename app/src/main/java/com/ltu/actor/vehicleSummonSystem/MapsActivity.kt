@@ -1,6 +1,7 @@
 package com.ltu.actor.vehicleSummonSystem
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,18 +10,21 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.ltu.actor.vehicleSummonSystem.RideServiceClient.Companion.VEHICLE_IP
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -28,8 +32,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var mLocationCallback: LocationCallback
+    private lateinit var mDeviceLocationTextView: TextView
+    private lateinit var mFollowLocationSwitch: SwitchCompat
 
     private var mLastLocation: Location? = null
+    private var mShouldFollowLocationOnMap = false
 
     // Lifecycle
     @DelicateCoroutinesApi
@@ -47,9 +54,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        mDeviceLocationTextView = findViewById(R.id.device_location)
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+        mFollowLocationSwitch = findViewById(R.id.follow_location_switch)
+        mFollowLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            mShouldFollowLocationOnMap = isChecked
+        }
+
         mLocationCallback = object : LocationCallback() {
+            @SuppressLint("SetTextI18n")
             override fun onLocationResult(locationResult: LocationResult?) {
                 //                            stopLocationUpdates()
                 Log.i(TAG, "Location Received.")
@@ -58,6 +73,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.i(TAG, "Available Locations: $locations")
                     mLastLocation = locationResult.locations[0]
                     Log.i(TAG, "Setting Location: $mLastLocation")
+
+                    mLastLocation?.let { location ->
+                        mDeviceLocationTextView.text = "(${location.latitude}, ${location.longitude})"
+
+
+                        if (mShouldFollowLocationOnMap) {
+                            mMap.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(
+                                        location.latitude,
+                                        location.longitude
+                                    ), 13f
+                                )
+                            )
+                            val cameraPosition = CameraPosition.Builder()
+                                .target(
+                                    LatLng(
+                                        location.latitude,
+                                        location.longitude
+                                    )
+                                ).zoom(19f).bearing(90f).tilt(40f).build()
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                        }
+                    }
                 } else {
                     //                                onRetrieval(null)
                     Log.i(TAG, "Location NOT GOOD: $locationResult")
@@ -132,7 +171,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             @Suppress("DeferredResultUnused")
             GlobalScope.async {
                 Log.i(TAG, "Launched thread to make request")
-                showSnackBar(mainText = "${getString(R.string.sending_location)} $VEHICLE_IP")
+//                showSnackBar(mainText = "${getString(R.string.sending_location)} $VEHICLE_IP")
+                showSnackBar(mainText = "${getString(R.string.sending_location)} (${it.latitude}, ${it.longitude})")
 
                 client.sendPostRequestForLocation(it, object : RideServiceClientCallback {
                     override fun completionHandler(success: Boolean?, type: RequestType?) {
