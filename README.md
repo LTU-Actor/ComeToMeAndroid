@@ -51,3 +51,5 @@ Then, start the VSS application on the device. When prompted, accept the device 
 Once the application is running and device location permission accepted, toggle 'ON' the "Follow Location" switch. Wait for the device to find a fixed location and center the map. Then, press the "Summon Vehicle" button.
 
 When the location is sent, there will be a dialog message displayed with the destination Vehicle IP (i.e. LTU-Taxi web server address) and the latitude and longitude of the device.
+
+<img width="333" alt="Screen Shot 2021-07-02 at 10 57 04 PM" src="https://user-images.githubusercontent.com/259698/124695543-63ceb180-deb1-11eb-9f89-ad14a66df868.png">
